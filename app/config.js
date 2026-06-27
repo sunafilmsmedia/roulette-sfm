@@ -3,7 +3,7 @@
    (les intégrations sont per-projet : webhook, pixel, Clarity)
    =================================================================== */
 export const CONFIG = {
-  marque: "Ton Offre",
+  marque: "Suna Films Media",
 
   // 🎁 Le prix (HTML) affiché au gagnant. Mets ton vrai prix ici.
   prixHTML:
@@ -73,17 +73,17 @@ export const QUESTIONS = [
    La bille tombe sur une case OR si le joueur correspond à l'ICP.
    =================================================================== */
 export const POCKETS = [
-  { win: true,  color: "gold",  num: null }, // 0  🎁
+  { win: true,  color: "green", num: null }, // 0  🎁 (case verte, façon zéro)
   { win: false, color: "red",   num: 32 },
   { win: false, color: "black", num: 15 },
   { win: false, color: "red",   num: 19 },
   { win: false, color: "black", num: 4 },
-  { win: true,  color: "gold",  num: null }, // 5  🎁
+  { win: true,  color: "green", num: null }, // 5  🎁
   { win: false, color: "red",   num: 21 },
   { win: false, color: "black", num: 2 },
   { win: false, color: "red",   num: 25 },
   { win: false, color: "black", num: 17 },
-  { win: true,  color: "gold",  num: null }, // 10 🎁
+  { win: true,  color: "green", num: null }, // 10 🎁
   { win: false, color: "red",   num: 34 },
   { win: false, color: "black", num: 6 },
   { win: false, color: "red",   num: 27 },

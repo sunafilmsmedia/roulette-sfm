@@ -5,11 +5,11 @@ import { CONFIG, QUESTIONS, POCKETS } from "./config";
 
 /* ---- géométrie de la roue (px) ---- */
 const S = 340, R = S / 2, CX = S / 2, CY = S / 2;
-const P_OUT = R * 0.83, P_IN = R * 0.46;     // anneau des cases colorées
-const NUM_R = P_OUT * 0.86;                   // rayon des numéros
-const TRACK_R = R * 0.895;                    // orbite de la bille (piste)
-const REST_R = R * 0.70;                      // bille au repos dans une case
-const BALL = 6.5;
+const P_OUT = R * 0.78, P_IN = R * 0.44;     // anneau des cases colorées
+const NUM_R = P_OUT * 0.87;                   // rayon des numéros
+const TRACK_R = R * 0.82;                     // orbite de la bille (piste laiton)
+const REST_R = R * 0.66;                      // bille au repos dans une case
+const BALL = 6;
 
 export default function Page() {
   const [screen, setScreen] = useState("intro");
@@ -74,29 +74,41 @@ export default function Page() {
 
     drawBowl(ctx);
 
-    // tête de roue (cases + numéros + moyeu) — tourne
+    // tête de roue (cases + numéros + tourelle) — tourne
     ctx.save();
     ctx.translate(CX, CY);
     ctx.rotate((wheelDeg.current * Math.PI) / 180);
     drawHead(ctx);
     ctx.restore();
 
+    drawGloss(ctx);
     drawBall(ctx);
   }
 
   function drawBowl(ctx) {
-    // socle / bezel foncé
-    const bz = ctx.createRadialGradient(CX, CY, R * 0.78, CX, CY, R);
-    bz.addColorStop(0, "#1c140d"); bz.addColorStop(.62, "#0c0907"); bz.addColorStop(1, "#040303");
-    ctx.beginPath(); ctx.arc(CX, CY, R, 0, 7); ctx.fillStyle = bz; ctx.fill();
-    // piste dorée (fixe) où roule la bille
-    const tg = ctx.createRadialGradient(CX, CY, R * 0.84, CX, CY, R * 0.955);
-    tg.addColorStop(0, "#6b4f1c"); tg.addColorStop(.45, "#d9b65a"); tg.addColorStop(.55, "#f3da8c"); tg.addColorStop(1, "#6e501c");
-    ctx.beginPath(); ctx.arc(CX, CY, R * 0.955, 0, 7); ctx.fillStyle = tg; ctx.fill();
-    // liseré brillant
-    ctx.beginPath(); ctx.arc(CX, CY, R * 0.955, 0, 7); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,240,200,.5)"; ctx.stroke();
-    // creux intérieur de la piste
-    ctx.beginPath(); ctx.arc(CX, CY, R * 0.84, 0, 7); ctx.fillStyle = "#070504"; ctx.fill();
+    // --- bol en bois verni ---
+    const wd = ctx.createRadialGradient(CX, CY, R * 0.55, CX, CY, R);
+    wd.addColorStop(0, "#241408");
+    wd.addColorStop(.78, "#3a2310");
+    wd.addColorStop(.88, "#7a4f28");
+    wd.addColorStop(.93, "#542f17");
+    wd.addColorStop(1, "#1b0f07");
+    ctx.beginPath(); ctx.arc(CX, CY, R, 0, 7); ctx.fillStyle = wd; ctx.fill();
+    // reflet spéculaire (haut-gauche) pour le verni
+    const sp = ctx.createRadialGradient(CX - R * 0.34, CY - R * 0.42, R * 0.04, CX - R * 0.30, CY - R * 0.36, R * 0.85);
+    sp.addColorStop(0, "rgba(255,228,185,.20)"); sp.addColorStop(.5, "rgba(255,200,150,.05)"); sp.addColorStop(1, "transparent");
+    ctx.beginPath(); ctx.arc(CX, CY, R * 0.985, 0, 7); ctx.fillStyle = sp; ctx.fill();
+
+    // --- jante laiton (piste de la bille, fixe) ---
+    ctx.beginPath(); ctx.arc(CX, CY, R * 0.87, 0, 7); ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.stroke();
+    const tg = ctx.createRadialGradient(CX, CY, R * 0.79, CX, CY, R * 0.865);
+    tg.addColorStop(0, "#6e521d"); tg.addColorStop(.4, "#b9923f"); tg.addColorStop(.52, "#f0d489"); tg.addColorStop(.62, "#c79c46"); tg.addColorStop(1, "#5d441a");
+    ctx.beginPath(); ctx.arc(CX, CY, R * 0.865, 0, 7); ctx.fillStyle = tg; ctx.fill();
+    // liseré brillant + ombre interne (lèvre bankée)
+    ctx.beginPath(); ctx.arc(CX, CY, R * 0.865, 0, 7); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,244,210,.55)"; ctx.stroke();
+    const sh = ctx.createRadialGradient(CX, CY, R * 0.79, CX, CY, R * 0.83);
+    sh.addColorStop(0, "rgba(0,0,0,.55)"); sh.addColorStop(1, "transparent");
+    ctx.beginPath(); ctx.arc(CX, CY, R * 0.83, 0, 7); ctx.fillStyle = sh; ctx.fill();
   }
 
   function drawHead(ctx) {
@@ -110,10 +122,13 @@ export default function Page() {
       ctx.closePath();
       const p = POCKETS[i];
       const g = ctx.createRadialGradient(0, 0, P_IN, 0, 0, P_OUT);
-      if (p.win) { g.addColorStop(0, "#f7e08b"); g.addColorStop(1, "#c9982a"); }
-      else if (p.color === "red") { g.addColorStop(0, "#d8232f"); g.addColorStop(1, "#6e0c12"); }
-      else { g.addColorStop(0, "#26262f"); g.addColorStop(1, "#08080c"); }
+      if (p.color === "green") { g.addColorStop(0, "#2bbd6b"); g.addColorStop(1, "#0a5128"); }
+      else if (p.color === "red") { g.addColorStop(0, "#d8232f"); g.addColorStop(1, "#5e0a10"); }
+      else { g.addColorStop(0, "#2a2a33"); g.addColorStop(1, "#070709"); }
       ctx.fillStyle = g; ctx.fill();
+      // biseau : liseré clair sur l'arc extérieur, ombre sur l'intérieur
+      ctx.beginPath(); ctx.arc(0, 0, P_OUT - 1.2, a0 + .03, a1 - .03);
+      ctx.lineWidth = 2; ctx.strokeStyle = "rgba(255,255,255,.10)"; ctx.stroke();
 
       // numéro / cadeau
       const mid = a0 + step / 2;
@@ -121,44 +136,74 @@ export default function Page() {
       ctx.translate(Math.cos(mid) * NUM_R, Math.sin(mid) * NUM_R);
       ctx.rotate(mid + Math.PI / 2);
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      if (p.win) { ctx.font = "16px Arial"; ctx.fillText("🎁", 0, 0); }
+      if (p.win) { ctx.font = "15px Arial"; ctx.fillText("🎁", 0, 0); }
       else {
         ctx.fillStyle = "#f6efe0";
-        ctx.font = "bold 13px Georgia, 'Times New Roman', serif";
+        ctx.font = "bold 12px Georgia, 'Times New Roman', serif";
         ctx.fillText(String(p.num), 0, 0);
       }
       ctx.restore();
     }
-    // séparateurs (frettes) + studs dorés
+    // séparateurs (frettes laiton) + studs
     for (let i = 0; i < n; i++) {
       const a = -Math.PI / 2 - step / 2 + i * step;
       const c0 = Math.cos(a), s0 = Math.sin(a);
       ctx.beginPath();
       ctx.moveTo(c0 * P_IN, s0 * P_IN);
       ctx.lineTo(c0 * P_OUT, s0 * P_OUT);
-      ctx.lineWidth = 1.4; ctx.strokeStyle = "rgba(244,220,150,.55)"; ctx.stroke();
-      ctx.beginPath(); ctx.arc(c0 * P_OUT, s0 * P_OUT, 2.3, 0, 7);
+      ctx.lineWidth = 2.4; ctx.strokeStyle = "rgba(208,166,84,.85)"; ctx.stroke();
+      ctx.lineWidth = 0.8; ctx.strokeStyle = "rgba(255,245,210,.7)"; ctx.stroke();
+      ctx.beginPath(); ctx.arc(c0 * P_OUT, s0 * P_OUT, 2.4, 0, 7);
       ctx.fillStyle = "#f3da8c"; ctx.fill();
+      ctx.lineWidth = .6; ctx.strokeStyle = "rgba(90,60,15,.8)"; ctx.stroke();
     }
-    // moyeu central (turret dorée)
-    const hg = ctx.createRadialGradient(0, -R * 0.12, R * 0.04, 0, 0, P_IN);
-    hg.addColorStop(0, "#f7e08b"); hg.addColorStop(.5, "#caa544"); hg.addColorStop(1, "#7c5a1f");
-    ctx.beginPath(); ctx.arc(0, 0, P_IN, 0, 7); ctx.fillStyle = hg; ctx.fill();
-    // rayons
-    for (let k = 0; k < 8; k++) {
-      ctx.save(); ctx.rotate((k * Math.PI) / 4);
+    drawTurret(ctx);
+  }
+
+  function drawTurret(ctx) {
+    // disque laiton central
+    const td = ctx.createRadialGradient(-R * 0.08, -R * 0.10, R * 0.02, 0, 0, P_IN);
+    td.addColorStop(0, "#f6e0a4"); td.addColorStop(.42, "#cda44f"); td.addColorStop(.78, "#8a6526"); td.addColorStop(1, "#4f3713");
+    ctx.beginPath(); ctx.arc(0, 0, P_IN, 0, 7); ctx.fillStyle = td; ctx.fill();
+    // gorges usinées
+    [P_IN * 0.82, P_IN * 0.6, P_IN * 0.4].forEach((rr) => {
+      ctx.beginPath(); ctx.arc(0, 0, rr, 0, 7); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(0,0,0,.28)"; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, rr - 1.4, 0, 7); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,244,205,.30)"; ctx.stroke();
+    });
+    // poignée en croix (spindle)
+    for (let k = 0; k < 4; k++) {
+      ctx.save(); ctx.rotate((k * Math.PI) / 2);
       ctx.beginPath();
-      ctx.moveTo(0, -R * 0.04);
-      ctx.quadraticCurveTo(R * 0.05, -R * 0.26, 0, -P_IN * 0.94);
-      ctx.quadraticCurveTo(-R * 0.05, -R * 0.26, 0, -R * 0.04);
-      ctx.fillStyle = "rgba(255,240,200,.22)"; ctx.fill();
+      ctx.moveTo(-R * 0.032, -R * 0.05);
+      ctx.lineTo(-R * 0.016, -R * 0.40);
+      ctx.quadraticCurveTo(0, -R * 0.435, R * 0.016, -R * 0.40);
+      ctx.lineTo(R * 0.032, -R * 0.05);
+      ctx.closePath();
+      const ag = ctx.createLinearGradient(-R * 0.03, 0, R * 0.03, 0);
+      ag.addColorStop(0, "#6a4c1b"); ag.addColorStop(.5, "#f3da8c"); ag.addColorStop(1, "#6a4c1b");
+      ctx.fillStyle = ag; ctx.fill();
+      ctx.lineWidth = .6; ctx.strokeStyle = "rgba(60,40,10,.6)"; ctx.stroke();
       ctx.restore();
     }
-    // capuchon central
-    const cap = ctx.createRadialGradient(-3, -3, 1, 0, 0, R * 0.13);
-    cap.addColorStop(0, "#fff4cf"); cap.addColorStop(.6, "#e0b94f"); cap.addColorStop(1, "#8a6a1f");
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.13, 0, 7); ctx.fillStyle = cap; ctx.fill();
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.045, 0, 7); ctx.fillStyle = "#5a4416"; ctx.fill();
+    // pommeau central
+    const cap = ctx.createRadialGradient(-3, -3, 1, 0, 0, R * 0.085);
+    cap.addColorStop(0, "#fff6d8"); cap.addColorStop(.55, "#e6c061"); cap.addColorStop(1, "#7d5a1e");
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.085, 0, 7); ctx.fillStyle = cap; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.03, 0, 7); ctx.fillStyle = "#4a3411"; ctx.fill();
+  }
+
+  /* reflet vitré global (ne tourne pas) */
+  function drawGloss(ctx) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(CX, CY, R, 0, 7); ctx.clip();
+    const gl = ctx.createLinearGradient(0, CY - R, 0, CY + R * 0.2);
+    gl.addColorStop(0, "rgba(255,255,255,.12)"); gl.addColorStop(.5, "rgba(255,255,255,.03)"); gl.addColorStop(1, "transparent");
+    ctx.fillStyle = gl; ctx.fillRect(0, 0, S, S);
+    // vignette
+    const vg = ctx.createRadialGradient(CX, CY, R * 0.5, CX, CY, R);
+    vg.addColorStop(0, "transparent"); vg.addColorStop(1, "rgba(0,0,0,.4)");
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, S, S);
+    ctx.restore();
   }
 
   function drawBall(ctx) {
@@ -166,10 +211,12 @@ export default function Page() {
     const bx = CX + ballRad.current * Math.cos(rad);
     const by = CY + ballRad.current * Math.sin(rad);
     ctx.beginPath(); ctx.arc(bx + 1, by + 2, BALL, 0, 7);
-    ctx.fillStyle = "rgba(0,0,0,.45)"; ctx.fill();
-    const bg = ctx.createRadialGradient(bx - 2.2, by - 2.2, .6, bx, by, BALL + 1);
-    bg.addColorStop(0, "#ffffff"); bg.addColorStop(.45, "#e8e8ec"); bg.addColorStop(1, "#8f8f98");
+    ctx.fillStyle = "rgba(0,0,0,.5)"; ctx.fill();
+    const bg = ctx.createRadialGradient(bx - 2, by - 2.2, .5, bx, by, BALL + 1);
+    bg.addColorStop(0, "#ffffff"); bg.addColorStop(.4, "#eaeaee"); bg.addColorStop(1, "#8c8c95");
     ctx.beginPath(); ctx.arc(bx, by, BALL, 0, 7); ctx.fillStyle = bg; ctx.fill();
+    // petit éclat
+    ctx.beginPath(); ctx.arc(bx - 1.8, by - 1.8, 1.4, 0, 7); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fill();
   }
 
   /* repeindre quand on entre sur l'écran roue */
@@ -323,7 +370,7 @@ export default function Page() {
           {/* INTRO */}
           {screen === "intro" && (
             <section>
-              <span className="eyebrow">★ La Roue de la Fortune ★</span>
+              <span className="eyebrow">{CONFIG.marque} · La Roue</span>
               <h1>Tourne la roue.<br /><span className="hl">30% de chance</span> de gagner un logiciel AI qui remplit ton agenda.</h1>
               <p>Réponds à 3 questions, lance la bille, et découvre en 30 secondes si la chance est de ton côté. Aucun achat requis.</p>
               <button className="btn" onClick={() => go("quiz")}>Jouer maintenant 🎯</button>
