@@ -69,15 +69,24 @@ export const QUESTIONS = [
 ];
 
 /* ===================================================================
-   ROUE — 8 segments (3 gagnants)
+   ROUE DE CASINO — 16 cases (rouge / noir + 3 cases OR gagnantes)
+   La bille tombe sur une case OR si le joueur correspond à l'ICP.
    =================================================================== */
-export const SEGMENTS = [
-  { label: "LOGICIEL GRATUIT", win: true },
-  { label: "Presque…", win: false },
-  { label: "50% RABAIS", win: true },
-  { label: "Rejoue", win: false },
-  { label: "ACCÈS VIP", win: true },
-  { label: "Pas cette fois", win: false },
-  { label: "Dommage", win: false },
-  { label: "Oups !", win: false },
+export const POCKETS = [
+  { win: true,  color: "gold",  num: null }, // 0  🎁
+  { win: false, color: "red",   num: 32 },
+  { win: false, color: "black", num: 15 },
+  { win: false, color: "red",   num: 19 },
+  { win: false, color: "black", num: 4 },
+  { win: true,  color: "gold",  num: null }, // 5  🎁
+  { win: false, color: "red",   num: 21 },
+  { win: false, color: "black", num: 2 },
+  { win: false, color: "red",   num: 25 },
+  { win: false, color: "black", num: 17 },
+  { win: true,  color: "gold",  num: null }, // 10 🎁
+  { win: false, color: "red",   num: 34 },
+  { win: false, color: "black", num: 6 },
+  { win: false, color: "red",   num: 27 },
+  { win: false, color: "black", num: 13 },
+  { win: false, color: "red",   num: 36 },
 ];
