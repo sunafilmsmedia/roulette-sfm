@@ -17,7 +17,7 @@ export const CONFIG = {
   webhookUrl: "",
 
   // 📊 Tracking (laisse vide si non utilisé)
-  metaPixelId: "",
+  metaPixelId: "889823396710916",
   clarityId: "",
 
   // 🎯 RÈGLES ICP — qui GAGNE (Sylvain : courtier établi qui veut scaler)
