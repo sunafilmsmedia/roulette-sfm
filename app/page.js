@@ -362,6 +362,15 @@ export default function Page() {
 
   const q = QUESTIONS[qIndex];
 
+  const eduNote = (
+    <div className="edu">
+      <p style={{ margin: 0 }}>
+        <b>En passant…</b> ce que tu viens de jouer — le quiz, la roue, le résultat — <b>c'est un logiciel.</b> Le même
+        genre de système peut transformer <b>n'importe quelle offre</b> en jeu auquel tes prospects veulent jouer.
+      </p>
+    </div>
+  );
+
   return (
     <div className="wrap">
       <div className="card">
@@ -401,6 +410,7 @@ export default function Page() {
                 <div className="pointer" />
                 <canvas ref={canvasRef} className="wheel" />
               </div>
+              {eduNote}
               <button className="btn" disabled={spinning} onClick={spin}>
                 {spinning ? "La bille tourne…" : "LANCER LA BILLE 🎡"}
               </button>
@@ -415,9 +425,7 @@ export default function Page() {
               <div className="prize-box" dangerouslySetInnerHTML={{ __html: CONFIG.prixHTML }} />
               <p className="center small">Pour réclamer ton prix, entre tes infos ci-dessous. On t'envoie l'accès directement. 👇</p>
               <button className="btn" onClick={() => openForm("gagnant")}>Réclamer mon prix 🏆</button>
-              <div className="edu" style={{ marginTop: 18 }}>
-                <p style={{ margin: 0 }}><b>En passant…</b> ce que tu viens de jouer — le quiz, la roue, le résultat — <b>c'est un logiciel.</b> Le même genre de système peut transformer <b>n'importe quelle offre</b> en jeu auquel tes prospects veulent jouer.</p>
-              </div>
+              {eduNote}
             </section>
           )}
 
@@ -426,10 +434,7 @@ export default function Page() {
             <section>
               <div className="result-emoji">🙃</div>
               <h2 className="center">Pas le prix cette fois… mais lis ça 👇</h2>
-              <div className="edu">
-                <p><b>Ce que tu viens de vivre — le quiz, la roue, ton résultat — c'est UN LOGICIEL.</b></p>
-                <p style={{ margin: 0 }}>Le même genre de logiciel peut transformer <b>n'importe quelle offre</b> en jeu auquel tes prospects <b>veulent</b> jouer. Imagine tes futurs clients qui se qualifient eux-mêmes… pendant que tu dors.</p>
-              </div>
+              {eduNote}
               <div className="prize-box">Tu veux le <b>même système</b> pour TON business —<br />+ du contenu et de la pub payante qui amène le trafic ?</div>
               <button className="btn" onClick={() => openForm("perdant_interesse")}>Oui, montre-moi comment 🚀</button>
               <button className="btn ghost" onClick={() => go("intro")}>Non merci, rejouer</button>

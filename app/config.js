@@ -22,7 +22,7 @@ export const CONFIG = {
 
   // 🎯 RÈGLES ICP — qui GAGNE (Sylvain : courtier établi qui veut scaler)
   icp: {
-    metiers: ["courtier_hypothecaire", "courtier_immobilier", "courtier_assurance"],
+    metiers: ["courtier_hypothecaire", "courtier_immobilier"],
     experiences: ["3_8", "8_plus"],
     objectifs: ["croitre", "scaler"],
   },
@@ -39,8 +39,6 @@ export const QUESTIONS = [
     options: [
       { ico: "🏠", txt: "Courtier hypothécaire", val: "courtier_hypothecaire" },
       { ico: "🔑", txt: "Courtier immobilier", val: "courtier_immobilier" },
-      { ico: "🛡️", txt: "Conseiller / courtier en assurance", val: "courtier_assurance" },
-      { ico: "💼", txt: "Vente / représentant", val: "vendeur" },
       { ico: "✨", txt: "Entrepreneur / autre", val: "autre" },
     ],
   },
